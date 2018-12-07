@@ -7,6 +7,12 @@ steps:
   inputs:
     versionSpec: "1.10.1"
 
+- task: AzureKeyVault@1
+  displayName: 'Azure Key Vault: Get Secrets'
+  inputs:
+    azureSubscription: 'VS Code Setup, Update, and Build Services (8afa857f-ba38-4efa-bd5b-41fc50ac5200)'
+    KeyVaultName: vscode
+
 - script: |
     set -e
     echo "machine monacotools.visualstudio.com password $(VSO_PAT)" > ~/.netrc
@@ -66,7 +72,7 @@ steps:
     # publish the build
     PACKAGEJSON=`ls ../VSCode-darwin/*.app/Contents/Resources/app/package.json`
     VERSION=`node -p "require(\"$PACKAGEJSON\").version"`
-    AZURE_DOCUMENTDB_MASTERKEY="$(AZURE_DOCUMENTDB_MASTERKEY)" \
+    AZURE_DOCUMENTDB_MASTERKEY="$(builds-docdb-key-readwrite)" \
     AZURE_STORAGE_ACCESS_KEY_2="$(AZURE_STORAGE_ACCESS_KEY_2)" \
     MOONCAKE_STORAGE_ACCESS_KEY="$(MOONCAKE_STORAGE_ACCESS_KEY)" \
     node build/azure-pipelines/common/publish.js \

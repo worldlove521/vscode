@@ -7,6 +7,12 @@ steps:
   inputs:
     versionSpec: "1.10.1"
 
+- task: AzureKeyVault@1
+  displayName: 'Azure Key Vault: Get Secrets'
+  inputs:
+    azureSubscription: 'VS Code Setup, Update, and Build Services (8afa857f-ba38-4efa-bd5b-41fc50ac5200)'
+    KeyVaultName: vscode
+
 - task: UsePythonVersion@0
   inputs:
     versionSpec: '2.x'
@@ -135,7 +141,7 @@ steps:
     $Quality = "$env:VSCODE_QUALITY"
     $env:AZURE_STORAGE_ACCESS_KEY_2 = "$(AZURE_STORAGE_ACCESS_KEY_2)"
     $env:MOONCAKE_STORAGE_ACCESS_KEY = "$(MOONCAKE_STORAGE_ACCESS_KEY)"
-    $env:AZURE_DOCUMENTDB_MASTERKEY = "$(AZURE_DOCUMENTDB_MASTERKEY)"
+    $env:AZURE_DOCUMENTDB_MASTERKEY = "$(builds-docdb-key-readwrite)"
 
     $assetPlatform = if ("$(VSCODE_ARCH)" -eq "ia32") { "win32" } else { "win32-x64" }
 
